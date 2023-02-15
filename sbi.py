@@ -16,6 +16,10 @@ FETCH_ALL = os.environ.get("FETCH_ALL", "false").lower() == "true"
 if not os.environ.get("SBI_ACCOUNT") or not os.environ.get("SBI_PASSWORD"):
     raise ValueError("SBI_ACCOUNT or SBI_PASSWORD is not set")
 
+print("=== SBI PDF ===")
+print("Run at", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+
+
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=HEADLESS)
     context = browser.new_context(
@@ -41,7 +45,8 @@ with sync_playwright() as p:
     page.wait_for_load_state("networkidle");
     total_count = int(page.locator("//div[contains(@class,'control__counter')]/span").inner_text())
     items = page.locator("//mat-accordion[contains(@class,'items')]/mat-expansion-panel")
-    while items.count() < total_count:
+    print(f"Found {items.count()=} items")
+    while items.count() < total_count and items.count() < 100:
         page.evaluate("""
             () => {
                 window.scrollTo(0,document.body.scrollHeight);
@@ -54,7 +59,8 @@ with sync_playwright() as p:
             }
         """);
         page.wait_for_load_state("networkidle");
-        items = page.locator("//mat-accordion[contains(@class,'items')]/mat-expansion-panel")
+        items = page.locator("//mat-accordion[contains(@class,'item')]/mat-expansion-panel")
+        print(f"Found {items.count()=} items")
     print(f"Found {items.count()} items")
     for idx in range(0, items.count()):
         item = items.nth(idx)
