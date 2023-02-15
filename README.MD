@@ -1,5 +1,8 @@
 # SBI PDF Downloader
 
+> This is a python crawler project that can automatically scrape the trading notification PDF files issued by SBI Securities.
+> これは、SBI証券が発行する取引通知PDFファイルを自動的にスクレイピングできるPythonクローラープロジェクトです。
+
 ## 1. Install
 
 ```bash
